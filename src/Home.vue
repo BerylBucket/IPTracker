@@ -1,53 +1,54 @@
 <template>
-<div id="tracker">
-  <div id="bg"></div>
-  <div id="map"></div>
-  <h1>IP Address Tracker</h1>
-  <div class="wrap">
-  <div id="ipInput" style="position: relative;">
-    <input placeholder="192.212.174.101" v-model="ip" />
-    <a @click="apiCall" class="btn">
-      <svg xmlns="http://www.w3.org/2000/svg" width="11" height="14">
-        <path fill="none" stroke="#FFF" stroke-width="3" d="M2 1l6 6-6 6" /></svg>
-    </a>
+  <div id="tracker">
+    <div id="bg"></div>
+    <div id="map"></div>
+    <h1>IP Address Tracker</h1>
+    <div class="wrap">
+      <div id="ipInput" style="position: relative">
+        <input placeholder="192.212.174.101" v-model="ip" />
+        <a @click="apiCall" class="btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="14">
+            <path fill="none" stroke="#FFF" stroke-width="3" d="M2 1l6 6-6 6" />
+          </svg>
+        </a>
+      </div>
+      <div id="infoCard">
+        <div>
+          <h2>ip address</h2>
+          <span id="ip">{{ ip }}</span>
+        </div>
+        <div>
+          <h2>location</h2>
+          <span>{{ addr }}</span>
+        </div>
+        <div>
+          <h2>timezone</h2>
+          <span>{{ tz }}</span>
+        </div>
+        <div>
+          <h2>isp</h2>
+          <span>{{ isp }}</span>
+        </div>
+      </div>
+    </div>
   </div>
-  <div id="infoCard">
-    <div>
-      <h2>ip address</h2>
-      <span id="ip">{{ip}}</span>
-    </div>
-    <div>
-      <h2>location</h2>
-      <span>{{addr}}</span>
-    </div>
-    <div>
-      <h2>timezone</h2>
-      <span>{{tz}}</span>
-    </div>
-    <div>
-      <h2>isp</h2>
-      <span>{{isp}}</span>
-    </div>
-  </div>
-  </div>
-</div>
 </template>
 
 <script>
-  import "leaflet/dist/leaflet.css";
-  import L from "leaflet";
-  
-  export default {
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+
+export default {
   data() {
     return {
-    a: "",
-    ip: "8.8.8.8",
-    addr: "",
-    tz: "",
-    isp: "",
-    lat: 0,
-    lng: 0
-}
+      a: "",
+      ip: "8.8.8.8",
+      addr: "",
+      tz: "",
+      isp: "",
+      lat: 0,
+      lng: 0,
+    };
   },
   mounted() {
     this.addMap();
@@ -116,7 +117,7 @@
         ["Washington", "WA"],
         ["West Virginia", "WV"],
         ["Wisconsin", "WI"],
-        ["Wyoming", "WY"]
+        ["Wyoming", "WY"],
       ];
       input = input.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
@@ -147,7 +148,7 @@
           id: "mapbox/streets-v11",
           tileSize: 512,
           zoomOffset: -1,
-          accessToken: mapboxTkn
+          accessToken: mapboxTkn,
         }
       ).addTo(map);
       var myIcon = L.icon({
@@ -155,7 +156,7 @@
           "https://raw.githubusercontent.com/BerylBucket/ArchStudio/dev/src/assets/marker.svg",
         iconSize: [38, 95],
         iconAnchor: [22, 94],
-        popupAnchor: [-3, -76]
+        popupAnchor: [-3, -76],
       });
       var off1 = L.marker([self.lat, self.lng], { icon: myIcon }).addTo(map);
     },
@@ -168,7 +169,12 @@
         .then((res) => res.json())
         .then((data) => {
           var loc = data.location;
-          self.addr = loc.city + ", " + this.convertRegion(loc.region) + " " + loc.postalCode;
+          self.addr =
+            loc.city +
+            ", " +
+            this.convertRegion(loc.region) +
+            " " +
+            loc.postalCode;
           self.tz = "UTC" + loc.timezone;
           self.isp = data.isp;
           self.lat = loc.lat;
@@ -178,13 +184,13 @@
         .catch((err) => {
           console.log(err);
         });
-    }
-}
-}
+    },
+  },
+};
 </script>
 
 <style>
-  :root {
+:root {
   --black: hsl(0, 0%, 17%);
   --gray: hsl(0, 0%, 59%);
 }
@@ -269,9 +275,9 @@ input::placeholder {
   display: flex;
   position: absolute;
   -webkit-box-pack: center;
-          justify-content: center;
+  justify-content: center;
   -webkit-box-align: center;
-          align-items: center;
+  align-items: center;
   background: var(--black);
   border-radius: 0 15px 15px 0;
   top: 0;
@@ -305,8 +311,8 @@ span {
     padding: 25px 30px;
   }
   #infoCard div {
-  margin-bottom: 23px;
-}
+    margin-bottom: 23px;
+  }
   #bg {
     width: 100%;
     height: 300px;
@@ -322,12 +328,12 @@ span {
     margin: auto;
   }
 }
-@media (min-width: 1024px){
-    #bg {
+@media (min-width: 1024px) {
+  #bg {
     height: 280px;
   }
-  #infoCard{
-  display: grid;
+  #infoCard {
+    display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     background: linear-gradient(
       to right,
@@ -343,7 +349,15 @@ span {
     );
   }
   #infoCard div {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(28%, #fff), color-stop(28%, #0000), color-stop(72%, #0000), color-stop(72%, #fff));
+    background: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(28%, #fff),
+      color-stop(28%, #0000),
+      color-stop(72%, #0000),
+      color-stop(72%, #fff)
+    );
     background: linear-gradient(#fff 28%, #0000 28%, #0000 72%, #fff 72%);
     height: 100%;
   }
