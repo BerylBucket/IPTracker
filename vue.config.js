@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: "/ArchStudio/",
+  publicPath: "/IPTracker/",
   pages: {
     index: {
       // entry for the page
