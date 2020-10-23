@@ -285,7 +285,7 @@ input::placeholder {
   width: 58px;
   height: 100%;
 }
-.btn:hover{
+.btn:hover {
   background: #555;
 }
 #infoCard {
