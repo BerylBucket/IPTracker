@@ -41,8 +41,7 @@ import L from "leaflet";
 export default {
   data() {
     return {
-      a: "",
-      ip: "8.8.8.8",
+      ip: "",
       addr: "",
       tz: "",
       isp: "",
@@ -177,6 +176,7 @@ export default {
             loc.postalCode;
           self.tz = "UTC" + loc.timezone;
           self.isp = data.isp;
+          self.ip = data.ip;
           self.lat = loc.lat;
           self.lng = loc.lng;
           self.addMap();
@@ -285,7 +285,9 @@ input::placeholder {
   width: 58px;
   height: 100%;
 }
-
+.btn:hover{
+  background: #555;
+}
 #infoCard {
   width: 100%;
   background: #fff;
