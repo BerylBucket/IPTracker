@@ -33,6 +33,156 @@
 </div>
 </template>
 
+<script>
+  import "leaflet/dist/leaflet.css";
+  import L from "leaflet";
+  
+  export default {
+  data() {
+    return {
+    a: "",
+    ip: "8.8.8.8",
+    addr: "",
+    tz: "",
+    isp: "",
+    lat: 0,
+    lng: 0
+}
+  },
+  mounted() {
+    this.addMap();
+    this.apiCall();
+  },
+  methods: {
+    convertRegion(input) {
+      var inp = input;
+      var states = [
+        ["Alabama", "AL"],
+        ["Alaska", "AK"],
+        ["American Samoa", "AS"],
+        ["Arizona", "AZ"],
+        ["Arkansas", "AR"],
+        ["Armed Forces Americas", "AA"],
+        ["Armed Forces Europe", "AE"],
+        ["Armed Forces Pacific", "AP"],
+        ["California", "CA"],
+        ["Colorado", "CO"],
+        ["Connecticut", "CT"],
+        ["Delaware", "DE"],
+        ["District Of Columbia", "DC"],
+        ["Florida", "FL"],
+        ["Georgia", "GA"],
+        ["Guam", "GU"],
+        ["Hawaii", "HI"],
+        ["Idaho", "ID"],
+        ["Illinois", "IL"],
+        ["Indiana", "IN"],
+        ["Iowa", "IA"],
+        ["Kansas", "KS"],
+        ["Kentucky", "KY"],
+        ["Louisiana", "LA"],
+        ["Maine", "ME"],
+        ["Marshall Islands", "MH"],
+        ["Maryland", "MD"],
+        ["Massachusetts", "MA"],
+        ["Michigan", "MI"],
+        ["Minnesota", "MN"],
+        ["Mississippi", "MS"],
+        ["Missouri", "MO"],
+        ["Montana", "MT"],
+        ["Nebraska", "NE"],
+        ["Nevada", "NV"],
+        ["New Hampshire", "NH"],
+        ["New Jersey", "NJ"],
+        ["New Mexico", "NM"],
+        ["New York", "NY"],
+        ["North Carolina", "NC"],
+        ["North Dakota", "ND"],
+        ["Northern Mariana Islands", "NP"],
+        ["Ohio", "OH"],
+        ["Oklahoma", "OK"],
+        ["Oregon", "OR"],
+        ["Pennsylvania", "PA"],
+        ["Puerto Rico", "PR"],
+        ["Rhode Island", "RI"],
+        ["South Carolina", "SC"],
+        ["South Dakota", "SD"],
+        ["Tennessee", "TN"],
+        ["Texas", "TX"],
+        ["US Virgin Islands", "VI"],
+        ["Utah", "UT"],
+        ["Vermont", "VT"],
+        ["Virginia", "VA"],
+        ["Washington", "WA"],
+        ["West Virginia", "WV"],
+        ["Wisconsin", "WI"],
+        ["Wyoming", "WY"]
+      ];
+      input = input.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
+      var i;
+      for (i = 0; i < states.length; i++) {
+        if (states[i][0] == input) {
+          inp = states[i][1];
+        }
+      }
+      return inp;
+    },
+    addMap() {
+      var self = this;
+      var container = L.DomUtil.get("map");
+      if (container != null) {
+        container._leaflet_id = null;
+      }
+      var map = L.map("map").setView([self.lat, self.lng], 12);
+      var mapboxTkn =
+        "pk.eyJ1IjoiYmVyeWxidWNrZXQiLCJhIjoiY2tnMGN5bnpzMDVvdDJ5bzRzYWNycGFwdCJ9.qL7LzKJLPi_1VA_Hh9dEpQ";
+      L.tileLayer(
+        "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+        {
+          attribution:
+            'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+          maxZoom: 18,
+          id: "mapbox/streets-v11",
+          tileSize: 512,
+          zoomOffset: -1,
+          accessToken: mapboxTkn
+        }
+      ).addTo(map);
+      var myIcon = L.icon({
+        iconUrl:
+          "https://raw.githubusercontent.com/BerylBucket/ArchStudio/dev/src/assets/marker.svg",
+        iconSize: [38, 95],
+        iconAnchor: [22, 94],
+        popupAnchor: [-3, -76]
+      });
+      var off1 = L.marker([self.lat, self.lng], { icon: myIcon }).addTo(map);
+    },
+    apiCall() {
+      var self = this;
+      fetch(
+        "https://geo.ipify.org/api/v1?apiKey=at_ThBLrGIjLCWpcLS8VMONPeDKbjy0W&ipAddress=" +
+          self.ip
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          var loc = data.location;
+          self.addr = loc.city + ", " + this.convertRegion(loc.region) + " " + loc.postalCode;
+          self.tz = "UTC" + loc.timezone;
+          self.isp = data.isp;
+          self.lat = loc.lat;
+          self.lng = loc.lng;
+          self.addMap();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+}
+}
+</script>
+
 <style>
   :root {
   --black: hsl(0, 0%, 17%);
